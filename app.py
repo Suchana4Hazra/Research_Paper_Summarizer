@@ -59,9 +59,6 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
-
-
-
 # Use markdown with CSS to adjust the height
 
 # Load and resize image
@@ -81,21 +78,19 @@ st.markdown("Enter paper details to generate a summary using our optimized model
 @st.cache_resource
 def load_model_and_tokenizer():
     try:
-        # Load a smaller, faster model
         model_name = "sshleifer/distilbart-cnn-12-6"  # Smaller, faster model
-        
-        # Show loading progress
-        with st.status("Loading summarization model (first load may take a minute)...") as status:
+
+        # Show a spinner without exposing function internals
+        with st.spinner("Loading summarization model (first load may take a minute)..."):
             tokenizer = AutoTokenizer.from_pretrained(model_name)
             model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-            
+
             # Convert to half precision for faster inference
             if torch.cuda.is_available():
                 model = model.half().cuda()
-                status.update(label="Model loaded on GPU with half precision")
             else:
-                status.update(label="Model loaded on CPU")
-            
+                model = model
+
             # Create optimized pipeline
             summarizer = pipeline(
                 "summarization", 
@@ -103,12 +98,14 @@ def load_model_and_tokenizer():
                 tokenizer=tokenizer, 
                 device=0 if torch.cuda.is_available() else -1
             )
-            status.update(label="Model loaded successfully!", state="complete")
-        
-        return summarizer
+
+        return summarizer  # Spinner disappears once this completes
+
     except Exception as e:
-        st.error(f"Error loading model or tokenizer: {e}")
+        st.error("❌ Error loading model. Please try again.")
         return None
+
+
 
 # Generate summary function with optimized parameters
 def generate_summary(text, summarizer, max_length=96, min_length=20):
@@ -315,4 +312,4 @@ if 'example_clicked' in st.session_state and st.session_state['example_clicked']
 
 # Add footer
 st.markdown("---")
-st.markdown("Research Paper Summarizer App | ©Gradient Geeks | Created with Streamlit")
+st.markdown("Research Paper Summarizer App | ©Gradient Geeks | Created with Streamlit 👑")

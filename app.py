@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from PIL import Image
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 import time
@@ -10,16 +11,70 @@ st.set_page_config(
     page_icon="📚",
     layout="wide"
 )
+import streamlit as st
 
-# Sidebar with team members
-st.sidebar.title("Team Members")
-st.sidebar.markdown("1. Team Member 1")
-st.sidebar.markdown("2. Team Member 2")
-st.sidebar.markdown("3. Team Member 3")
-st.sidebar.markdown("4. Team Member 4")
+# Remove sidebar top padding
+st.markdown(
+    """
+    <style>
+        [data-testid="stSidebar"] {
+            padding-top: 0px !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-# Main content
-st.title("Research Paper Summarizer")
+# Short Welcome Message
+st.sidebar.markdown("## 🌟 Welcome!")
+# # Add an image at the top
+st.sidebar.image("./robot.jpg", use_container_width=True)
+
+# Project Short Description
+st.sidebar.markdown("""
+### 📌 About This Project  
+🔍 **AI Research Paper Summarizer** – Generate clear, concise summaries of scientific papers instantly. Save time, grasp key insights, and stay ahead in research!
+""")
+
+st.sidebar.markdown("## 👥 Meet Our Team")
+
+st.sidebar.markdown("""
+👨‍💻 [Anurag Ghosh](https://github.com/Anurag-ghosh-12) &nbsp;&nbsp;  
+👨‍💻 [Siddharth Sen](https://github.com/Sidhupaji-2004) &nbsp;&nbsp;  
+👩‍💻 [Suchana Hazra](https://github.com/Suchana4Hazra) &nbsp;&nbsp;  
+👨‍💻 [Uttam Mahata](https://github.com/Uttam-Mahata)  
+""", unsafe_allow_html=True)
+
+# # Add a demo GIF (optional)
+# st.sidebar.markdown("## 🎥 Project Demo")
+# st.sidebar.image("./demo.gif", use_container_width=True)
+
+# Explore Project Button
+st.sidebar.markdown("## 🔗 Explore More")
+
+st.sidebar.markdown(
+    '<a href="https://github.com/Suchana4Hazra/Research_Paper_Summarizer" target="_blank">'
+    '<button style="background-color:#4CAF50; color:white; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; font-size:16px;">'
+    '🚀 Explore Project on GitHub</button></a>',
+    unsafe_allow_html=True
+)
+
+
+
+
+# Use markdown with CSS to adjust the height
+
+# Load and resize image
+img = Image.open("robot2.webp")  # Ensure correct path
+img = img.resize((img.width, int(img.height * 0.8)))  # Reduce height by 20%
+
+# Display resized image
+st.image(img, use_container_width=True)
+
+
+
+# Optional: Add a title or welcome message below the image
+st.title("🧠 AI Research Paper Summarizer")
 st.markdown("Enter paper details to generate a summary using our optimized model.")
 
 # Load model and tokenizer directly from Hugging Face with optimizations
